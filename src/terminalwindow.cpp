@@ -74,7 +74,7 @@ public:
         tabBar->setVisible(false);
         newTab = addChild<HeaderButton>("add", kNewTabButtonSize);
         newTab->setName("newTab");
-        newTab->setPlateAlphas({0.05, 0.10}, {0.05, 0.10});
+        newTab->setToolbarAppearance(true);
         newTab->setVisible(false);
         header = addChild<WindowHeader>(kHeaderHeight);
         header->setButtonMargin(0);

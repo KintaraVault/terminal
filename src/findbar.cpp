@@ -11,7 +11,7 @@
 #include "ui/keys.h"
 #include "ui/painter.h"
 #include "ui/cell_layout.h"
-#include "ui/text_field.h"
+#include "ui/search_field.h"
 #include "ui/theme.h"
 
 #include "TerminalView.h"
@@ -20,7 +20,7 @@ using namespace cutefish::ui;
 using cutefish::i18n::tr;
 
 // The field's keys: Enter searches, Shift+Enter searches the other way, Escape closes.
-class FindField : public TextField
+class FindField : public SearchField
 {
 public:
     std::function<void(bool shift)> onReturn;
@@ -37,7 +37,7 @@ protected:
             onEscape();
             return true;
         }
-        return TextField::keyPress(event);
+        return SearchField::keyPress(event);
     }
 };
 
@@ -60,10 +60,10 @@ FindBar::FindBar(Konsole::TerminalView* terminal)
     setVisible(false);
 
     m_field->setName("findField");
-    m_field->setFrameVisible(false);
-    m_field->setTextMargins(0, 0);
     m_previous->setGlyph("chevron-up", 16);
     m_next->setGlyph("chevron-down", 16);
+    for (auto* button : {m_previous, m_next, m_close})
+        button->setToolbarAppearance(true);
 
     m_field->onTextChanged = [this] { search(false, false); };
     m_field->onReturn = [this](bool shift) { search(shift, true); };
@@ -96,11 +96,8 @@ void FindBar::updateColors()
 {
     m_field->setTextColor(m_notFound ? m_error : m_text);
     m_field->setPlaceholderColor(m_text.withAlpha(0.45));
+    m_field->setGlyphColor(m_text.withAlpha(0.72));
     m_field->setSelectionColors(m_accent.withAlpha(0.4), m_text);
-    // The tint the hover and press plates are drawn in: white on dark, #323238 on light.
-    m_previous->setPlateAlphas({0.11, 0.21}, {0.12, 0.06});
-    m_next->setPlateAlphas({0.11, 0.21}, {0.12, 0.06});
-    m_close->setPlateAlphas({0.11, 0.21}, {0.12, 0.06});
     // The chevrons in the scheme foreground; the close artwork and the plates follow the header's dark mode.
     m_previous->setGlyphColor(m_text);
     m_next->setGlyphColor(m_text);
