@@ -164,8 +164,7 @@ void FindBar::layout()
 
 void FindBar::paint(Painter& painter)
 {
-    const Theme& theme = Theme::current();
     const Color fill = tint(m_background, m_text.withAlpha(m_darkMode ? 0.1 : 0.06));
-    // A rounded rectangle with a 0.5 px border, not pixel aligned.
-    painter.drawSmoothRectangle(localRect(), theme.bigRadius, fill, 0.5, m_text.withAlpha(0.12));
+    const RectF bounds = localRect();
+    painter.drawRoundedRect(bounds, {bounds.height / 2}, fill, 1 / painter.scale(), m_text.withAlpha(0.14));
 }

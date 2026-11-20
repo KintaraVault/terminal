@@ -77,6 +77,8 @@ public:
         cutefish::ui::TestDriver& question = dialog(driver);
         ASSERT_NE(&question.window(), &driver.window());
         question.setKeyboardFocus(true);
+        // Closing a running shell is destructive: Cancel has initial focus.
+        question.typeKey(cutefish::ui::key::Tab);
         question.typeKey(cutefish::ui::key::Return);
     }
 

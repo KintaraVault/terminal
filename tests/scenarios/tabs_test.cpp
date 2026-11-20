@@ -47,6 +47,15 @@ TEST(TabsTest, CloseOtherTabsKeepsTheChosenTab)
     driver.chooseMenuItem("Shell", "New Tab");
     ASSERT_EQ(tabs(driver).size(), 2u);
 
+    // Return alone must not close the running shell.
+    driver.chooseMenuItem("Shell", "Close Other Tabs");
+    ui::TestDriver& question = scenario.dialog(driver);
+    ASSERT_NE(&question.window(), &driver.window());
+    question.setKeyboardFocus(true);
+    question.typeKey(ui::key::Return);
+    ASSERT_EQ(tabs(driver).size(), 2u);
+    ASSERT_TRUE(busy->session().hasActiveProcess());
+
     driver.chooseMenuItem("Shell", "Close Other Tabs");
     scenario.confirm(driver);
     ASSERT_EQ(tabs(driver).size(), 1u);
